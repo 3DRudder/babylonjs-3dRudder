@@ -4,6 +4,10 @@
 ![BabylonJS](https://img.shields.io/badge/BabylonJS-v3.2.0-green.svg)
 
 # BabylonJS 3dRudder extension
+Work in progress
 
 # Setup
-* Open 'Node.js command prompt', got the root folder and write ```npm install babylonjs-3drudder```
+* Open 'Node.js command prompt', got the root folder and write ```npm install```
+
+# Build for browser
+* soon
