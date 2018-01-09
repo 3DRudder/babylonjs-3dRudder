@@ -1,0 +1,40 @@
+{
+  "name": "babylonsjs-3drudder",
+  "version": "1.0.0",
+  "description": "BabylonJS extension for the 3dRudder controller",
+  "main": "src/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "build": "webpack --config ./webpack.typescript.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3DRudder/babylonsjs-3dRudder.git"
+  },
+  "keywords": [
+    "3drudder",
+    "virtual",
+    "reality",
+    "foot-controller",
+    "babylonjs",
+    "vr"
+  ],
+  "author": "mvivant",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/3DRudder/babylonsjs-3dRudder/issues"
+  },
+  "homepage": "https://github.com/3DRudder/babylonsjs-3dRudder#readme",
+  "devDependencies": {
+    "@types/node": "^9.3.0",
+    "ts-loader": "^3.2.0",
+    "typescript": "^2.6.2",
+    "webpack": "^3.8.1"
+  },
+  "dependencies": {
+    "3drudder-js": "^1.0.1",
+    "babylonjs": "^3.2.0-alpha0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+    "files": [
+        "src/babylon-extension.ts"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es5",
+        "allowJs": true,
+        "outDir": "dist",
+        "sourceMap": false,
+        "types": [
+            "babylonjs",
+            "node"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        ".npm"
+    ]    
+}
