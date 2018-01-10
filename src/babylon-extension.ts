@@ -3,7 +3,7 @@ import { Scene, FreeCamera, Matrix, Vector3, Vector2, Nullable, ICameraInput, Ca
 // import 3dRudder SDK
 import * as Sdk3dRudder from '3drudder-js';
 
-export class Free3dRudderCamera extends FreeCamera {
+/*export class Free3dRudderCamera extends FreeCamera {
     
     constructor(name: string, position: Vector3, scene: Scene) {
         super(name, position, scene);
@@ -13,7 +13,7 @@ export class Free3dRudderCamera extends FreeCamera {
     public getClassName(): string {
         return "Free3dRudderCamera";
     }
-}
+}*/
 
 export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     camera: FreeCamera;        
@@ -26,7 +26,7 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     private _deltaTransform: Vector3 = Vector3.Zero();
     private _vector3: Vector3 = Vector3.Zero();
     private _vector2: Vector2 = Vector2.Zero();        
-    private SDK: any;
+    private SDK: any = new Sdk3dRudder();
 
     public checkInputs() {
         var controller = this.SDK.controllers[this.port];
@@ -50,7 +50,6 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     }
     
     attachControl(element : HTMLElement, noPreventDefault?: boolean) {
-        this.SDK = new Sdk3dRudder();
         this.SDK.init();
     }
 
