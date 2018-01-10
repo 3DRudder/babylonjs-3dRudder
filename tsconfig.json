@@ -3,7 +3,7 @@
         "src/babylon-extension.ts"
     ],
     "compilerOptions": {
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "module": "commonjs",
         "moduleResolution": "node",
         "target": "es5",

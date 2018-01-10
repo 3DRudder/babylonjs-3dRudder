@@ -6,7 +6,9 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'babylon-3dRudder.js'
+        filename: 'babylon-3dRudder.js',
+        libraryTarget: 'commonjs',
+        library: 'BABYLON3dRudder'
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
