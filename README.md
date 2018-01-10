@@ -4,10 +4,18 @@
 ![BabylonJS](https://img.shields.io/badge/BabylonJS-v3.2.0-green.svg)
 
 # BabylonJS 3dRudder extension
-Work in progress
+## Usage
+```javascript
+var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-5), scene);
+// add 3dRudder input to move the camera
+camera.inputs.add(new BABYLON3dRudder.FreeCamera3dRudderInput());
+// attach the camera to the canvas
+camera.attachControl(canvas, false);
+```
 
-# Setup
-* Open 'Node.js command prompt', got the root folder and write ```npm install```
+## Build for browser
+* ```npm install```
+* ```npm run build```
 
-# Build for browser
-* soon
+## Sample
+* [FreeCamera](/examples/babylon.html)

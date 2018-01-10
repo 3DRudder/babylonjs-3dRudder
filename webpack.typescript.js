@@ -19,12 +19,7 @@ module.exports = {
 
     ],
     externals: [
-        {"3drudder-js": {
-            root: "Sdk3dRudder",
-            commonjs2: "3drudder-js",
-            commonjs: ["3drudder-js"],
-            amd: "3drudder-js"
-        }},
+        "ws",
         {"babylonjs": {
             root: "BABYLON",
             commonjs2: "babylonjs",
