@@ -62,4 +62,4 @@ typings/
 _site/
 Gemfile.lock
 .gem
-.map
+*.map

@@ -1,3 +1,13 @@
+/*!
+ * 
+ * FreeCamera3dRudderInput v1.0.0                                                  
+ * https://github.com/3DRudder/babylonjs-3dRudder
+ *                                                                             
+ * Copyright 2017 3dRudder, Inc. and other contributors                      
+ * Released under the MIT license                                     
+ * https://github.com/3DRudder/babylonjs-3dRudder/blob/master/LICENSE                 
+*/
+
 // import all babylon
 import { Scene, FreeCamera, Matrix, Vector3, Vector2, Nullable, ICameraInput, CameraInputTypes } from 'babylonjs';
 // import 3dRudder SDK

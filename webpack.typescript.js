@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require("webpack");
 
 module.exports = {
     entry: {
@@ -16,10 +17,9 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-
+        new webpack.IgnorePlugin(/^ws$/)
     ],
-    externals: [
-        "ws",
+    externals: [        
         {"babylonjs": {
             root: "BABYLON",
             commonjs2: "babylonjs",
