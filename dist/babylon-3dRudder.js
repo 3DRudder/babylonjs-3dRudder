@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("babylonjs"), require("ws"));
+		module.exports = factory(require("babylonjs"));
 	else if(typeof define === 'function' && define.amd)
-		define("BABYLON3dRudder", ["babylonjs", "ws"], factory);
+		define("BABYLON3dRudder", ["babylonjs"], factory);
 	else if(typeof exports === 'object')
-		exports["BABYLON3dRudder"] = factory(require("babylonjs"), require("ws"));
+		exports["BABYLON3dRudder"] = factory(require("babylonjs"));
 	else
-		root["BABYLON3dRudder"] = factory(root["BABYLON"], root["ws"]);
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_6__) {
+		root["BABYLON3dRudder"] = factory(root["BABYLON"]);
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_3__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -1942,22 +1942,20 @@ function isUndefined(arg) {
 
 "use strict";
 
+/*!
+ *
+ * FreeCamera3dRudderInput v1.0.0
+ * https://github.com/3DRudder/babylonjs-3dRudder
+ *
+ * Copyright 2017 3dRudder, Inc. and other contributors
+ * Released under the MIT license
+ * https://github.com/3DRudder/babylonjs-3dRudder/blob/master/LICENSE
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 // import all babylon
 var babylonjs_1 = __webpack_require__(3);
 // import 3dRudder SDK
 var Sdk3dRudder = __webpack_require__(4);
-/*export class Free3dRudderCamera extends FreeCamera {
-    
-    constructor(name: string, position: Vector3, scene: Scene) {
-        super(name, position, scene);
-        this.inputs.add(new FreeCamera3dRudderInput());
-    }
-
-    public getClassName(): string {
-        return "Free3dRudderCamera";
-    }
-}*/
 var FreeCamera3dRudderInput = /** @class */ (function () {
     function FreeCamera3dRudderInput() {
         this.port = 0;
@@ -2028,10 +2026,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
 
 var isNode = (typeof(process) !== 'undefined' && process.versions && process.versions.node);
 // use Websocket for brower and ws for node.js
-var WebSocket = isNode ? __webpack_require__(6) : (window.WebSocket || window.MozWebSocket)
+var WebSocket = isNode ? __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"ws\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())) : (window.WebSocket || window.MozWebSocket)
     , _ = __webpack_require__(0)
     , EventEmitter = __webpack_require__(1).EventEmitter
-    , Controller = __webpack_require__(7);
+    , Controller = __webpack_require__(6);
 
 /**
  * Sdk constructor.
@@ -2560,12 +2558,6 @@ process.umask = function() { return 0; };
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_6__;
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
