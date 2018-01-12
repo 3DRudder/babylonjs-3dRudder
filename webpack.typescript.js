@@ -8,9 +8,8 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'babylon-3dRudder.js',
-        libraryTarget: 'umd',
+        libraryTarget: 'window',
         library: 'BABYLON3dRudder',
-        umdNamedDefine: true
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
@@ -22,6 +21,7 @@ module.exports = {
     externals: [        
         {"babylonjs": {
             root: "BABYLON",
+            window: "BABYLON",
             commonjs2: "babylonjs",
             commonjs: ["babylonjs"],
             amd: "babylonjs"
