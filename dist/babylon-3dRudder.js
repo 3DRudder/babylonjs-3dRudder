@@ -1,14 +1,5 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("babylonjs"));
-	else if(typeof define === 'function' && define.amd)
-		define("BABYLON3dRudder", ["babylonjs"], factory);
-	else if(typeof exports === 'object')
-		exports["BABYLON3dRudder"] = factory(require("babylonjs"));
-	else
-		root["BABYLON3dRudder"] = factory(root["BABYLON"]);
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_3__) {
-return /******/ (function(modules) { // webpackBootstrap
+window["BABYLON3dRudder"] =
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -1959,8 +1950,8 @@ var Sdk3dRudder = __webpack_require__(4);
 var FreeCamera3dRudderInput = /** @class */ (function () {
     function FreeCamera3dRudderInput() {
         this.port = 0;
-        this.speedRotation = 0.01;
-        this.speedTranslation = 0.1;
+        this.speedRotation = 0.1;
+        this.speedTranslation = babylonjs_1.Vector3.One();
         this._cameraTransform = babylonjs_1.Matrix.Identity();
         this._deltaTransform = babylonjs_1.Vector3.Zero();
         this._vector3 = babylonjs_1.Vector3.Zero();
@@ -1971,7 +1962,6 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
         var controller = this.SDK.controllers[this.port];
         if (controller.connected) {
             var camera = this.camera;
-            var pitch = controller.axis.pitch;
             if (!camera.rotationQuaternion) {
                 babylonjs_1.Matrix.RotationYawPitchRollToRef(camera.rotation.y, camera.rotation.x, 0, this._cameraTransform);
             }
@@ -1979,7 +1969,7 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
                 camera.rotationQuaternion.toRotationMatrix(this._cameraTransform);
             }
             var speed = this.speedTranslation;
-            this._vector3.copyFromFloats(controller.axis.roll * speed, controller.axis.updown * speed, controller.axis.pitch * speed);
+            this._vector3.copyFromFloats(controller.axis.roll * speed.x, controller.axis.updown * speed.y, controller.axis.pitch * speed.z);
             babylonjs_1.Vector3.TransformCoordinatesToRef(this._vector3, this._cameraTransform, this._deltaTransform);
             camera.cameraDirection.addInPlace(this._deltaTransform);
             this._vector2.copyFromFloats(0, controller.axis.yaw * this.speedRotation);
@@ -2008,7 +1998,7 @@ babylonjs_1.CameraInputTypes["FreeCamera3dRudderInput"] = FreeCamera3dRudderInpu
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+(function() { module.exports = window["BABYLON"]; }());
 
 /***/ }),
 /* 4 */
@@ -2860,5 +2850,4 @@ module.exports = Controller;
 
 /***/ })
 /******/ ]);
-});
 //# sourceMappingURL=babylon-3dRudder.js.map

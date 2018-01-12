@@ -17,8 +17,8 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     camera: FreeCamera;        
 
     public port = 0;
-    public speedRotation = 0.01;
-    public speedTranslation = 0.1;
+    public speedRotation = 0.1;
+    public speedTranslation: Vector3 = Vector3.One();
 
     private _cameraTransform: Matrix = Matrix.Identity();
     private _deltaTransform: Vector3 = Vector3.Zero();
@@ -29,8 +29,7 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     public checkInputs() {
         var controller = this.SDK.controllers[this.port];
         if (controller.connected){
-            var camera = this.camera;
-            var pitch = controller.axis.pitch;
+            var camera = this.camera;                        
             if (!camera.rotationQuaternion) {
                 Matrix.RotationYawPitchRollToRef(camera.rotation.y, camera.rotation.x, 0, this._cameraTransform);
             } else {
@@ -38,7 +37,7 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
             }
 
             var speed = this.speedTranslation;
-            this._vector3.copyFromFloats(controller.axis.roll * speed, controller.axis.updown * speed, controller.axis.pitch * speed);
+            this._vector3.copyFromFloats(controller.axis.roll * speed.x, controller.axis.updown * speed.y, controller.axis.pitch * speed.z);
 
             Vector3.TransformCoordinatesToRef(this._vector3, this._cameraTransform, this._deltaTransform);
             camera.cameraDirection.addInPlace(this._deltaTransform);

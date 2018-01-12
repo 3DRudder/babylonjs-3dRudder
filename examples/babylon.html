@@ -38,6 +38,7 @@
                 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-5), scene);
                 // add 3dRudder input to move the camera
                 camera.inputs.add(new BABYLON3dRudder.FreeCamera3dRudderInput());
+                camera.inertia = 0;
                 // target the camera to scene origin
                 camera.setTarget(BABYLON.Vector3.Zero());
 
