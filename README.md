@@ -8,7 +8,11 @@
 ```javascript
 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-5), scene);
 // add 3dRudder input to move the camera
-camera.inputs.add(new BABYLON3dRudder.FreeCamera3dRudderInput());
+var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput();
+camera.inputs.add(input3dRudder);
+camera.inertia = 0;
+input3dRudder.speedTranslation = new BABYLON.Vector3(0.5,0.1,1);
+input3dRudder.speedRotation = 0.05;
 // attach the camera to the canvas
 camera.attachControl(canvas, false);
 ```
@@ -19,3 +23,4 @@ camera.attachControl(canvas, false);
 
 ## Sample
 * [FreeCamera](/examples/babylon.html)
+* [PlayGround](https://playground.babylonjs.com/#ZUADV9#6)
