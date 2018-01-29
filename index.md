@@ -5,7 +5,9 @@
 
 # BabylonJS 3dRudder extension
 ## Usage
+```npm install babylonjs-3drudder```
 ```javascript
+import * as BABYLON3dRudder from 'babylonjs-3drudder';
 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-5), scene);
 // add 3dRudder input to move the camera
 var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput();
