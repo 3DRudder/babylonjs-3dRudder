@@ -48,10 +48,34 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     
     attachControl(element : HTMLElement, noPreventDefault?: boolean) {
         this.SDK.init();
+        this.SDK.on('connectedDevice' , function(device) { 
+            var controller = this.controllers[device.port];
+            controller.setModeAxis(controller.MODE.curveNonSymmectricalPitch);
+            controller.setCurves({
+                pitch: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0},
+                roll: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0},
+                yaw: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0},
+                updown: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0}
+            });
+        });
     }
 
     detachControl(element: Nullable<HTMLElement>) {
         this.SDK.stop();
+    }
+
+    setModeAxis(mode) {
+        var controller = this.SDK.controllers[this.port];
+        if (controller.connected){
+            controller.setModeAxis(mode);
+        }
+    }
+
+    setCurves(curves) {
+        var controller = this.SDK.controllers[this.port];
+        if (controller.connected){
+            controller.setCurves(curves);
+        }
     }
 
     getClassName(): string {
