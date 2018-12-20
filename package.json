@@ -1,6 +1,6 @@
 {
   "name": "babylonjs-3drudder",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "BabylonJS extension for the 3dRudder controller",
   "main": "src/index.js",
   "directories": {
@@ -34,7 +34,7 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "3drudder-js": "^1.0.4",
+    "3drudder-js": "^2.0.1",
     "babylonjs": "^3.2.0-alpha0"
   }
 }

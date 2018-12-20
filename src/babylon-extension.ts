@@ -37,44 +37,27 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
             }
 
             var speed = this.speedTranslation;
-            this._vector3.copyFromFloats(controller.axis.roll * speed.x, controller.axis.updown * speed.y, controller.axis.pitch * speed.z);
+            this._vector3.copyFromFloats(controller.axis.leftright * speed.x, controller.axis.updown * speed.y, controller.axis.forwardbackward * speed.z);
 
             Vector3.TransformCoordinatesToRef(this._vector3, this._cameraTransform, this._deltaTransform);
             camera.cameraDirection.addInPlace(this._deltaTransform);
-            this._vector2.copyFromFloats(0, controller.axis.yaw * this.speedRotation)
+            this._vector2.copyFromFloats(0, controller.axis.rotation * this.speedRotation)
             camera.cameraRotation.addInPlace(this._vector2);
         }
     }
     
     attachControl(element : HTMLElement, noPreventDefault?: boolean) {
-        this.SDK.init();
-        this.SDK.on('connectedDevice' , function(device) { 
-            var controller = this.controllers[device.port];
-            controller.setModeAxis(controller.MODE.curveNonSymmectricalPitch);
-            controller.setCurves({
-                pitch: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0},
-                roll: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0},
-                yaw: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0},
-                updown: {deadzone: 0.1, xSat: 1.0, yMax: 1.0, exp: 2.0}
-            });
-        });
+        this.SDK.init();        
     }
 
     detachControl(element: Nullable<HTMLElement>) {
         this.SDK.stop();
     }
 
-    setModeAxis(mode) {
+    setAxesParam(axesParam) {
         var controller = this.SDK.controllers[this.port];
         if (controller.connected){
-            controller.setModeAxis(mode);
-        }
-    }
-
-    setCurves(curves) {
-        var controller = this.SDK.controllers[this.port];
-        if (controller.connected){
-            controller.setCurves(curves);
+            controller.setAxesParam(axesParam);
         }
     }
 
