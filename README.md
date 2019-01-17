@@ -3,7 +3,9 @@
 ![Node.js](https://img.shields.io/badge/Node.js-v8.9.1-green.svg)
 ![BabylonJS](https://img.shields.io/badge/BabylonJS-v3.2.0-green.svg)
 
-# BabylonJS 3dRudder extension
+# BabylonJS 3dRudder extension v1.0.4
+* 3dRudder-js version 2.0.2
+
 ## Usage
 ```npm install babylonjs-3drudder```
 ```javascript
