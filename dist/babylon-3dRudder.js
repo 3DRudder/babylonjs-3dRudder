@@ -2097,6 +2097,7 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
         this.port = 0;
         this.speedRotation = 0.1;
         this.speedTranslation = babylonjs_1.Vector3.One();
+        this.onConnected = new BABYLON.Observable();
         this._cameraTransform = babylonjs_1.Matrix.Identity();
         this._deltaTransform = babylonjs_1.Vector3.Zero();
         this._vector3 = babylonjs_1.Vector3.Zero();
@@ -2122,7 +2123,11 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
         }
     };
     FreeCamera3dRudderInput.prototype.attachControl = function (element, noPreventDefault) {
+        var _this = this;
         this.SDK.init();
+        this.SDK.on('connectedDevice', function (device) {
+            _this.onConnected.notifyObservers(device.connected);
+        });
     };
     FreeCamera3dRudderInput.prototype.detachControl = function (element) {
         this.SDK.stop();

@@ -40,18 +40,24 @@
                 var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput();
                 camera.inputs.add(input3dRudder);
                 camera.inertia = 0;
-                input3dRudder.speedTranslation = new BABYLON.Vector3(0.5,0.1,1);
-                input3dRudder.speedRotation = 0.05;
-                input3dRudder.setAxesParam({
-                    roll2YawCompensation: 0.15,
-                    nonSymmetricalPitch: true,
-                    curves: {
-                        leftright: {deadzone: 0.15, xSat: 1.0, exp: 2.0},
-                        forwardbackward: {deadzone: 0.15, xSat: 1.0, exp: 2.0},
-                        updown: {deadzone: 0.08, xSat: 0.6, exp: 4.0},
-                        rotation: {deadzone: 0.15, xSat: 1.0, exp: 2.0},
+                input3dRudder.speedTranslation = new BABYLON.Vector3(0.1,0.1,0.5); // roll, up, pitch
+                input3dRudder.speedRotation = 0.025; // yaw
+                input3dRudder.onConnected.add((connected) => {
+                    // when the 3dRudder is connected set the AxesParam
+                    if (connected) {
+                        input3dRudder.setAxesParam({
+                            roll2YawCompensation: 0.15,
+                            nonSymmetricalPitch: true,
+                            curves: {
+                                leftright: {deadzone: 0.15, xSat: 1.0, exp: 2.0},
+                                forwardbackward: {deadzone: 0.15, xSat: 1.0, exp: 2.0},
+                                updown: {deadzone: 0.08, xSat: 0.6, exp: 4.0},
+                                rotation: {deadzone: 0.15, xSat: 1.0, exp: 2.0},
+                            }
+                        });
                     }
-                });
+                })
+                
                 // target the camera to scene origin
                 camera.setTarget(BABYLON.Vector3.Zero());
 

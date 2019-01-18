@@ -9,7 +9,7 @@
 */
 
 // import all babylon
-import { Scene, FreeCamera, Matrix, Vector3, Vector2, Nullable, ICameraInput, CameraInputTypes } from 'babylonjs';
+import { Scene, FreeCamera, Matrix, Vector3, Vector2, Nullable, ICameraInput, CameraInputTypes, Observable } from 'babylonjs';
 // import 3dRudder SDK
 import * as Sdk3dRudder from '3drudder-js';
 
@@ -19,6 +19,7 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     public port = 0;
     public speedRotation = 0.1;
     public speedTranslation: Vector3 = Vector3.One();
+    onConnected: Observable<boolean> = new BABYLON.Observable<boolean>();
 
     private _cameraTransform: Matrix = Matrix.Identity();
     private _deltaTransform: Vector3 = Vector3.Zero();
@@ -47,7 +48,10 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     }
     
     attachControl(element : HTMLElement, noPreventDefault?: boolean) {
-        this.SDK.init();        
+        this.SDK.init();
+        this.SDK.on('connectedDevice', (device: any) => {
+            this.onConnected.notifyObservers(device.connected);
+        });      
     }
 
     detachControl(element: Nullable<HTMLElement>) {
