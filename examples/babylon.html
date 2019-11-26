@@ -40,7 +40,7 @@
                 var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput({"schemeWs":"ws", "discovery": true});
                 input3dRudder.onDiscovery.add((urls) => {
                     if (urls.length > 0) {
-                        this.connect(urls[0].ip);                        
+                        input3dRudder.connect(urls[0].ip);                        
                     } else {
                         console.log("no servers found");
                     }

@@ -20,6 +20,17 @@ input3dRudder.speedRotation = 0.05;
 // attach the camera to the canvas
 camera.attachControl(canvas, false);
 ```
+* Use discovery
+```javascript
+var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput({"schemeWs":"ws", "discovery": true});
+input3dRudder.onDiscovery.add((urls) => {
+    if (urls.length > 0) {
+        input3dRudder.connect(urls[0].ip);                        
+    } else {
+        console.log("no servers found");
+    }
+});
+```
 
 ## Build for browser
 * ```npm install```
