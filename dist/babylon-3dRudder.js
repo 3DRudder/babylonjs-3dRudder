@@ -2093,16 +2093,17 @@ var babylonjs_1 = __webpack_require__(3);
 // import 3dRudder SDK
 var Sdk3dRudder = __webpack_require__(4);
 var FreeCamera3dRudderInput = /** @class */ (function () {
-    function FreeCamera3dRudderInput() {
+    function FreeCamera3dRudderInput(config) {
         this.port = 0;
         this.speedRotation = 0.1;
         this.speedTranslation = babylonjs_1.Vector3.One();
         this.onConnected = new BABYLON.Observable();
+        this.onDiscovery = new BABYLON.Observable();
         this._cameraTransform = babylonjs_1.Matrix.Identity();
         this._deltaTransform = babylonjs_1.Vector3.Zero();
         this._vector3 = babylonjs_1.Vector3.Zero();
         this._vector2 = babylonjs_1.Vector2.Zero();
-        this.SDK = new Sdk3dRudder();
+        this.SDK = new Sdk3dRudder(config);
     }
     FreeCamera3dRudderInput.prototype.checkInputs = function () {
         var controller = this.SDK.controllers[this.port];
@@ -2122,11 +2123,18 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
             camera.cameraRotation.addInPlace(this._vector2);
         }
     };
+    FreeCamera3dRudderInput.prototype.connect = function (url) {
+        this.SDK.host = url;
+        this.SDK.init();
+    };
     FreeCamera3dRudderInput.prototype.attachControl = function (element, noPreventDefault) {
         var _this = this;
         this.SDK.init();
         this.SDK.on('connectedDevice', function (device) {
             _this.onConnected.notifyObservers(device.connected);
+        });
+        this.SDK.on('discovery', function (urls) {
+            _this.onDiscovery.notifyObservers(urls);
         });
     };
     FreeCamera3dRudderInput.prototype.detachControl = function (element) {
@@ -2162,7 +2170,7 @@ babylonjs_1.CameraInputTypes["FreeCamera3dRudderInput"] = FreeCamera3dRudderInpu
 
 /* WEBPACK VAR INJECTION */(function(process) {/*!
  * 
- * 3dRudder v1.0.0                                                  
+ * 3dRudder v2.0.3                                                  
  * https://github.com/3DRudder/3dRudderjs                                        
  *                                                                             
  * Copyright 2017 3dRudder, Inc. and other contributors                      
@@ -2176,6 +2184,7 @@ var WebSocket = isNode ? __webpack_require__(!(function webpackMissingModule() {
     , _ = __webpack_require__(0)
     , EventEmitter = __webpack_require__(1).EventEmitter
     , Controller = __webpack_require__(8);
+const fetch = __webpack_require__(10);
 
 /**
  * Sdk constructor.
@@ -2185,6 +2194,16 @@ var WebSocket = isNode ? __webpack_require__(!(function webpackMissingModule() {
 */
 var Sdk = function(opts) {
     opts = opts || {};
+    /**
+     * if use the discovery by default
+     * @type {url}
+    */
+   this.discovery = opts.discovery || false;
+    /**
+     * the host of server
+     * @type {url}
+    */
+    this.discoveryUrl = opts.discoveryUrl || 'stun:224.0.0.82:15661';
     /**
      * the host of server
      * @type {url}
@@ -2302,6 +2321,9 @@ var Sdk = function(opts) {
             controller.default();
         });
     });
+
+    if (this.discovery)
+        this.startDiscovery();
 }
 
 /**
@@ -2522,6 +2544,42 @@ Sdk.prototype.freeze = function (port, freeze, callback) {
 Sdk.prototype.hide = function (port, hide, callback) {
     console.log('hide SDK');
     this.controllers[port].setHide(hide, callback);
+}
+
+/**
+ * Discovery for 3dRudder network.
+ *  
+*/
+Sdk.prototype.startDiscovery = function () {
+    console.log('discovery SDK');
+    var localConnection = new RTCPeerConnection({iceServers: [{urls: [this.discoveryUrl]}]});
+    localConnection.createDataChannel('discovery');
+    var _this = this;
+    localConnection.createOffer()
+    .then((desc) => {
+        console.log("setlocaldesc");
+        localConnection.setLocalDescription(desc);        
+        setTimeout(() => _this.stopDiscovery(localConnection), 1000);
+    }, (error) => {
+        console.log("error create offer" + error);
+    });
+}
+
+/**
+ * Stop the discovery for 3dRudder network.
+ *  
+*/
+Sdk.prototype.stopDiscovery = function (localConnection) {    
+    console.log("discovery end");
+    localConnection.close();
+    var _this = this;
+    // fetch json
+    fetch('http://wb.3drudder-dev.com/WV/C.php')
+    .then(res => res.text())
+    .then(body => {
+        let urls = JSON.parse(body);        
+        _this.emit('discovery', urls);
+    });    
 }
 
 _.extend(Sdk.prototype, EventEmitter.prototype);
@@ -2780,7 +2838,7 @@ module.exports = function(module) {
 
 /*!
  * 
- * 3dRudder v1.0.0                                                  
+ * 3dRudder v2.0.3                                                  
  * https://github.com/3DRudder/3dRudderjs                                        
  *                                                                             
  * Copyright 2017 3dRudder, Inc. and other contributors                      
@@ -2870,14 +2928,12 @@ Controller.prototype.init = function(SDK, device) {
 /**
  * Update function.
  * @private
- * @param {SDK} SDK
- *   SDK object
- * @param {object} device
+ * @param {object} controller
  *   All infos of connected device.
 */
 Controller.prototype.update = function(controller) {
     if (controller.error) {
-        console.log("error update controller " + error);
+        console.log("error update controller " + SDK.getErrorString(controller.error));
     }
     else {
         this.sensors = controller.sensors;
@@ -3146,7 +3202,7 @@ module.exports = Controller;
 
 /*!
  * 
- * 3dRudder v1.0.0                                                  
+ * 3dRudder v2.0.3                                                  
  * https://github.com/3DRudder/3dRudderjs                                        
  *                                                                             
  * Copyright 2017 3dRudder, Inc. and other contributors                      
@@ -3204,6 +3260,35 @@ var AxesParam = function() {
 //_.extend(Controller.prototype, EventEmitter.prototype);
 
 module.exports = AxesParam;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+// ref: https://github.com/tc39/proposal-global
+var getGlobal = function () {
+	// the only reliable means to get the global object is
+	// `Function('return this')()`
+	// However, this causes CSP violations in Chrome apps.
+	if (typeof self !== 'undefined') { return self; }
+	if (typeof window !== 'undefined') { return window; }
+	if (typeof global !== 'undefined') { return global; }
+	throw new Error('unable to locate global object');
+}
+
+var global = getGlobal();
+
+module.exports = exports = global.fetch;
+
+// Needed for TypeScript and Webpack.
+exports.default = global.fetch.bind(global);
+
+exports.Headers = global.Headers;
+exports.Request = global.Request;
+exports.Response = global.Response;
 
 /***/ })
 /******/ ]);

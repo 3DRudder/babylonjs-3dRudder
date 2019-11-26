@@ -37,7 +37,14 @@
                 // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
                 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 2,-10), scene);
                 // add 3dRudder input to move the camera
-                var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput();
+                var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput({"schemeWs":"ws", "discovery": true});
+                input3dRudder.onDiscovery.add((urls) => {
+                    if (urls.length > 0) {
+                        this.connect(urls[0].ip);                        
+                    } else {
+                        console.log("no servers found");
+                    }
+                });
                 camera.inputs.add(input3dRudder);
                 camera.inertia = 0;
                 input3dRudder.speedTranslation = new BABYLON.Vector3(0.1,0.1,0.5); // roll, up, pitch
@@ -56,7 +63,7 @@
                             }
                         });
                     }
-                })
+                })                
                 
                 // target the camera to scene origin
                 camera.setTarget(BABYLON.Vector3.Zero());
