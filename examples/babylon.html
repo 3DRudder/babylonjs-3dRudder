@@ -17,11 +17,26 @@
 
         #renderCanvas {
             width   : 100%;
-            height  : 100%;
-            touch-action: none;
+        }
+
+        #container {
+            position: relative;
+        }
+        #container canvas, #overlay {
+            position: absolute;
+            background-color: #5c5c5d;
+        }
+        canvas {
+            border: 1px solid black;
         }
     </style>
     <script>
+        var input3dRudder;
+        function connect() {    
+            var radio = document.querySelector('input[name="server"]:checked');        
+            input3dRudder.connect(radio.value);
+        }
+
         window.addEventListener('DOMContentLoaded', function(){
             // get the canvas DOM element
             var canvas = document.getElementById('renderCanvas');
@@ -30,19 +45,38 @@
             var engine = new BABYLON.Engine(canvas, true);
 
             // createScene function that creates and return the scene
-            var createScene = function(){
+            var createScene = function() {
                 // create a basic BJS Scene object
                 var scene = new BABYLON.Scene(engine);
 
                 // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
                 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 2,-10), scene);
                 // add 3dRudder input to move the camera
-                var input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput({"schemeWs":"ws", "discovery": true});
+                input3dRudder = new BABYLON3dRudder.FreeCamera3dRudderInput({"schemeWs":"ws", "discovery": true});
                 input3dRudder.onDiscovery.add((urls) => {
+                    document.getElementById('servers').innerHTML = `<label for="server">${urls.length} server(s) found</label>`;
                     if (urls.length > 0) {
-                        input3dRudder.connect(urls[0].ip);                        
-                    } else {
-                        console.log("no servers found");
+                        //this.host = urls[i].ip;                
+                        var selectList = document.createElement("fieldset");
+                        selectList.id = "server";
+                        document.getElementById('servers').appendChild(selectList);
+                        var list = document.createElement("ul");
+                        for(i in urls) {
+                            var url = document.createElement("li");
+                            var option = document.createElement("input");
+                            option.type = "radio";
+                            option.value = urls[i].ip;
+                            option.name = "server";
+                            option.id = i;
+                            //option.text = decodeURIComponent(escape(urls[i].name));                    
+                            url.appendChild(option);
+                            url.innerHTML += `<label for="${i}">${decodeURIComponent(escape(urls[i].name))}</label>`;  
+                            list.appendChild(url);
+                            //document.getElementById('servers').innerHTML += `<option value=${urls[i].ip}>Ip: ${urls[i].ip} name: ${decodeURIComponent(escape(urls[i].name))} </option>`;
+                        }
+                        selectList.appendChild(list);
+                        selectList.innerHTML += `<button id="button" onClick="connect()">Start connection</button>`;
+                        selectList.innerHTML += `<div id="result"></div>`;
                     }
                 });
                 camera.inputs.add(input3dRudder);
@@ -52,6 +86,7 @@
                 input3dRudder.onConnected.add((connected) => {
                     // when the 3dRudder is connected set the AxesParam
                     if (connected) {
+                        document.getElementById('result').innerHTML = "Connected";
                         input3dRudder.setAxesParam({
                             roll2YawCompensation: 0.15,
                             nonSymmetricalPitch: true,
@@ -89,7 +124,7 @@
 
             // call the createScene function
             var scene = createScene();
-
+            scene.debugLayer.show();
             // run the render loop
             engine.runRenderLoop(function(){
                 scene.render();
@@ -103,6 +138,12 @@
     </script>
 </head>
 <body>
-    <canvas id="renderCanvas"></canvas>
+    <div id="container">
+        <canvas id="renderCanvas"></canvas>
+        <div id="overlay">
+            <h1>Bridge Servers</h1>            
+            <div id="servers"></div>            
+        </div>
+    </div>
 </body>
 </html>
