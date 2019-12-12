@@ -33,8 +33,12 @@
     <script>
         var input3dRudder;
         function connect() {    
-            var radio = document.querySelector('input[name="server"]:checked');        
-            input3dRudder.connect(radio.value);
+            var radio = document.querySelector('input[name="server"]:checked');     
+            let textIp = document.getElementById("ip").value;
+            if (radio)   
+                input3dRudder.connect(radio.value);
+            else if (textIp)
+                input3dRudder.connect(textIp);
         }
 
         window.addEventListener('DOMContentLoaded', function(){
@@ -74,9 +78,7 @@
                             list.appendChild(url);
                             //document.getElementById('servers').innerHTML += `<option value=${urls[i].ip}>Ip: ${urls[i].ip} name: ${decodeURIComponent(escape(urls[i].name))} </option>`;
                         }
-                        selectList.appendChild(list);
-                        selectList.innerHTML += `<button id="button" onClick="connect()">Start connection</button>`;
-                        selectList.innerHTML += `<div id="result"></div>`;
+                        selectList.appendChild(list);                        
                     }
                 });
                 camera.inputs.add(input3dRudder);
@@ -143,6 +145,11 @@
         <div id="overlay">
             <h1>Bridge Servers</h1>            
             <div id="servers"></div>            
+            <p>If you don't find server, you can enter the IP:</p>
+            <p>You can find the IP on the <a href="https://support.3drudder.com/portal/kb/articles/dashboard-user-manual#About_Page">About page</a> of 3dRudder Dashboard</p>
+            <input type="text" id="ip" placeholder="192.168.1.X">
+            <button id="button" onClick="connect()">Start connection</button>
+            <div id="result"></div>
         </div>
     </div>
 </body>
