@@ -21,6 +21,7 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
     public speedTranslation: Vector3 = Vector3.One();
     onConnected: Observable<boolean> = new BABYLON.Observable<boolean>();
     onDiscovery: Observable<any> = new BABYLON.Observable<any>();
+    onClose: Observable<any> = new BABYLON.Observable<any>();
 
     private _cameraTransform: Matrix = Matrix.Identity();
     private _deltaTransform: Vector3 = Vector3.Zero();
@@ -52,9 +53,12 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
         }
     }
     
-    connect(url: string) {
-            this.SDK.host = url;
-            this.SDK.init();
+    connect(url: string) {        
+        this.SDK.init(url);
+    }
+
+    disconnect(url: string) {
+        this.SDK.stop();
     }
 
     attachControl(element : HTMLElement, noPreventDefault?: boolean) {        
@@ -65,6 +69,9 @@ export class FreeCamera3dRudderInput implements ICameraInput<FreeCamera> {
         this.SDK.on('discovery', (urls: any) => {
             this.onDiscovery.notifyObservers(urls);
         });      
+        this.SDK.on('end', () => {
+            this.onClose.notifyObservers(null);
+        });
     }
 
     detachControl(element: Nullable<HTMLElement>) {

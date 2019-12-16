@@ -32,13 +32,19 @@
     </style>
     <script>
         var input3dRudder;
+        var connected = false;
         function connect() {    
-            var radio = document.querySelector('input[name="server"]:checked');     
-            let textIp = document.getElementById("ip").value;
-            if (radio)   
-                input3dRudder.connect(radio.value);
-            else if (textIp)
-                input3dRudder.connect(textIp);
+            if (!connected) { 
+                var radio = document.querySelector('input[name="server"]:checked');     
+                let textIp = document.getElementById("ip").value;
+                if (radio)   
+                    input3dRudder.connect(radio.value);
+                else if (textIp)
+                    input3dRudder.connect(textIp);
+            } else {
+                input3dRudder.disconnect();
+                connected = false;
+            }
         }
 
         window.addEventListener('DOMContentLoaded', function(){
@@ -79,15 +85,24 @@
                             //document.getElementById('servers').innerHTML += `<option value=${urls[i].ip}>Ip: ${urls[i].ip} name: ${decodeURIComponent(escape(urls[i].name))} </option>`;
                         }
                         selectList.appendChild(list);                        
+                    } else {
+                        document.getElementById("help").hidden = false;
                     }
                 });
                 camera.inputs.add(input3dRudder);
                 camera.inertia = 0;
                 input3dRudder.speedTranslation = new BABYLON.Vector3(0.1,0.1,0.5); // roll, up, pitch
                 input3dRudder.speedRotation = 0.025; // yaw
-                input3dRudder.onConnected.add((connected) => {
+                input3dRudder.onClose.add( () => {
+                    document.getElementById('result').innerHTML = `Disconnected`;            
+                    document.getElementById('button').innerHTML = 'Start connection';                
+                    connected = false;
+                });
+                input3dRudder.onConnected.add((isConnected) => {
                     // when the 3dRudder is connected set the AxesParam
-                    if (connected) {
+                    if (isConnected) {
+                        connected = true;
+                        document.getElementById('button').innerHTML = 'Stop connection';
                         document.getElementById('result').innerHTML = "Connected";
                         input3dRudder.setAxesParam({
                             roll2YawCompensation: 0.15,
@@ -144,10 +159,12 @@
         <canvas id="renderCanvas"></canvas>
         <div id="overlay">
             <h1>Bridge Servers</h1>            
-            <div id="servers"></div>            
-            <p>If you don't find server, you can enter the IP:</p>
-            <p>You can find the IP on the <a href="https://support.3drudder.com/portal/kb/articles/dashboard-user-manual#About_Page">About page</a> of 3dRudder Dashboard</p>
-            <input type="text" id="ip" placeholder="192.168.1.X">
+            <div id="servers"></div>
+            <div id="help" hidden=true>
+                <p>If you don't find server, you can enter the IP:</p>
+                <p>You can find the IP on the <a href="https://support.3drudder.com/portal/kb/articles/dashboard-user-manual#About_Page">About page</a> of 3dRudder Dashboard</p>
+                <input type="text" id="ip" placeholder="192.168.1.X">
+            </div>            
             <button id="button" onClick="connect()">Start connection</button>
             <div id="result"></div>
         </div>
