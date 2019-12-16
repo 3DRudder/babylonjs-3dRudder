@@ -2099,6 +2099,7 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
         this.speedTranslation = babylonjs_1.Vector3.One();
         this.onConnected = new BABYLON.Observable();
         this.onDiscovery = new BABYLON.Observable();
+        this.onClose = new BABYLON.Observable();
         this._cameraTransform = babylonjs_1.Matrix.Identity();
         this._deltaTransform = babylonjs_1.Vector3.Zero();
         this._vector3 = babylonjs_1.Vector3.Zero();
@@ -2124,8 +2125,10 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
         }
     };
     FreeCamera3dRudderInput.prototype.connect = function (url) {
-        this.SDK.host = url;
-        this.SDK.init();
+        this.SDK.init(url);
+    };
+    FreeCamera3dRudderInput.prototype.disconnect = function (url) {
+        this.SDK.stop();
     };
     FreeCamera3dRudderInput.prototype.attachControl = function (element, noPreventDefault) {
         var _this = this;
@@ -2135,6 +2138,9 @@ var FreeCamera3dRudderInput = /** @class */ (function () {
         });
         this.SDK.on('discovery', function (urls) {
             _this.onDiscovery.notifyObservers(urls);
+        });
+        this.SDK.on('end', function () {
+            _this.onClose.notifyObservers(null);
         });
     };
     FreeCamera3dRudderInput.prototype.detachControl = function (element) {
@@ -2203,7 +2209,12 @@ var Sdk = function(opts) {
      * the host of server
      * @type {url}
     */
-    this.discoveryUrl = opts.discoveryUrl || 'stun:224.0.0.82:15661';
+    this.discoveryUrl = opts.discoveryUrl || ['stun:239.255.255.250:1900', 'stun:224.0.0.82:15661'];
+    /**
+     * the time to wait end discovery
+     * @type {integer}
+    */
+   this.waitDiscovery = opts.waitDiscovery || 3000;
     /**
      * the host of server
      * @type {url}
@@ -2233,7 +2244,7 @@ var Sdk = function(opts) {
      * the time to try to reconnect in ms
      * @type {integer}
     */
-    this.autoReconnectInterval = opts.autoReconnectInterval || 5*100;
+    this.autoReconnectInterval = opts.autoReconnectInterval || 500;
     // SDK params
     this.default();
 
@@ -2449,7 +2460,7 @@ Sdk.prototype.onMessage = function (message) {
 */
 Sdk.prototype.stopConnection = function () {
     if (this.connection) {
-        this.connection.close();
+        this.connection.close(1000);
     }
 }
 
@@ -2458,8 +2469,10 @@ Sdk.prototype.stopConnection = function () {
  * @function
  * this function must be call at first
 */
-Sdk.prototype.init = function () {
-    console.log('init SDK');    
+Sdk.prototype.init = function (ip) {    
+    if (ip != null)
+        this.host = ip;
+    console.log('init SDK ' + ip);    
     this.setupConnection();
 }
 
@@ -2553,14 +2566,14 @@ Sdk.prototype.hide = function (port, hide, callback) {
 */
 Sdk.prototype.startDiscovery = function () {
     console.log('discovery SDK');
-    var localConnection = new RTCPeerConnection({iceServers: [{urls: [this.discoveryUrl]}]});
+    var localConnection = new RTCPeerConnection({iceServers: [{urls: this.discoveryUrl}]});
     localConnection.createDataChannel('discovery');
     var _this = this;
     localConnection.createOffer()
     .then((desc) => {
         console.log("setlocaldesc");
         localConnection.setLocalDescription(desc);        
-        setTimeout(() => _this.stopDiscovery(localConnection), 1000);
+        setTimeout(() => _this.stopDiscovery(localConnection), this.waitDiscovery);
     }, (error) => {
         console.log("error create offer" + error);
     });
